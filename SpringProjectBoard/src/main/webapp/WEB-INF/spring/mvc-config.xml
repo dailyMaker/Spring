@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:websocket="http://www.springframework.org/schema/websocket"
+	xsi:schemaLocation="http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket-4.1.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<mvc:annotation-driven/>
+	
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/views/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+	
+	<mvc:view-controller path="/" view-name="index" />
+	
+	<mvc:resources location="/resources/" mapping="/**" />
+	<mvc:resources location="/resources/js/" mapping="/js/**" />
+	<mvc:resources location="/resources/css/" mapping="/css/**" />
+	<mvc:resources location="/resources/images/" mapping="/images/**" />
+	<mvc:resources location="/resources/font-awesome/" mapping="/font-awesome/**" />
+	<mvc:resources location="/resources/assets/" mapping="/assets/**" />
+	
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize">
+			<value>500000000</value>
+		</property>
+	</bean>
+	
+	<context:component-scan base-package="com.coderby.myapp.board.controller" />
+	<context:component-scan base-package="com.coderby.myapp.member.controller" />
+
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/file/**"/>
+			<mvc:mapping path="/board/write/**"/>
+			<mvc:mapping path="/board/update/**"/>
+			<mvc:mapping path="/board/reply/**"/>
+			<mvc:mapping path="/board/delete/**"/>
+			<mvc:exclude-mapping path="/board/cat/**" />
+	    	<bean class="com.coderby.myapp.common.filter.LoginInterceptor"/>
+		</mvc:interceptor>
+	</mvc:interceptors>
+
+</beans>
